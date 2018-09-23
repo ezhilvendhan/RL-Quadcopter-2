@@ -9,7 +9,7 @@ In this project, you will design an agent to fly a quadcopter, and then train it
 1. Clone the repository and navigate to the downloaded folder.
 
 ```
-git clone https://github.com/udacity/RL-Quadcopter-2.git
+git clone https://github.com/ezhilvendhan/RL-Quadcopter-2.git
 cd RL-Quadcopter-2
 ```
 
