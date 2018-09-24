@@ -1,7 +1,8 @@
 from keras import layers, models, optimizers
 from keras import backend as K
 
-class Actor:
+
+class Actor():
     """Actor (Policy) Model."""
 
     def __init__(self, state_size, action_size, action_low, action_high):

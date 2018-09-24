@@ -1,4 +1,8 @@
-class Critic:
+from keras import layers, models, optimizers
+from keras import backend as K
+
+
+class Critic():
     """Critic (Value) Model."""
 
     def __init__(self, state_size, action_size):
