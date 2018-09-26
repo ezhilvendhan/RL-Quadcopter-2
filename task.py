@@ -24,13 +24,32 @@ class Task():
         self.action_size = 4
 
         # Goal
-        self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.]) 
+        self.target_pos = target_pos if target_pos is not None else np.array([0., 0., 10.])
+
+        self.prev_pos = np.array([0.0, 0.0, 0.0]) if init_pose is None else np.copy(init_pose[:3])
+        self.prev_velocities = np.array([0.0, 0.0, 0.0]) if init_velocities is None else np.copy(init_velocities)
+        self.prev_angle_velocities = np.array([0.0, 0.0, 0.0]) if init_angle_velocities is None else np.copy(init_angle_velocities)
+
 
     def get_reward(self):
         """Uses current pose of sim to return reward."""
         reward_pos = self.sim.pose[:3] - self.target_pos
         reward_pos = np.array([1 if x < 1 else 0 for x in reward_pos])
-        reward = 1. - (0.6 * reward_pos).sum() + 0.3 * self.sim.runtime
+
+        # reward_pos_2 = abs(self.sim.pose[:3] - self.prev_pos)
+        # reward_pos_2 = np.array([1 if x > 5 else 0 for x in reward_pos_2])
+        # self.prev_pos = self.sim.pose[:3]
+
+        reward_vel = abs(self.sim.v - self.prev_velocities)
+        reward_vel = np.array([1 if x > 3 else 0 for x in reward_vel])
+        self.prev_velocities = self.sim.v
+
+        reward_ang_vel = abs(self.sim.angular_v - self.prev_angle_velocities)
+        reward_ang_vel = np.array([1 if x > 3 else 0 for x in reward_ang_vel])
+        self.prev_angle_velocities = self.sim.angular_v
+
+        reward = 1. - (0.6 * reward_pos).sum() - \
+            (0.1 * reward_vel).sum() - (0.1 * reward_ang_vel).sum() + 0.1 * self.sim.runtime
         return 1 / (1 + np.exp(-reward))
 
     def step(self, rotor_speeds):
