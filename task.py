@@ -31,7 +31,7 @@ class Task():
         reward_pos = self.sim.pose[:3] - self.target_pos
         reward_pos = np.array([1 if x < 1 else 0 for x in reward_pos])
         reward = 1. - (0.6 * reward_pos).sum() + 0.3 * self.sim.runtime
-        return np.tanh([reward])[0]
+        return 1 / (1 + np.exp(-reward))
 
     def step(self, rotor_speeds):
         """Uses action to obtain next state, reward, done."""
